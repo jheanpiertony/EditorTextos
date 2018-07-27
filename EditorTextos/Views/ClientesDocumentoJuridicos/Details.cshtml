@@ -1,0 +1,74 @@
+﻿@model EditorTextos.Models.ClientesDocumentoJuridicos
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ClientesDocumentoJuridicos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Clientes.PrimerNombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Clientes.PrimerNombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Empresas.Empresa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Empresas.Empresa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlantillaDocumentos.Plantilla)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlantillaDocumentos.Plantilla)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DocumentoTexto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DocumentoTexto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Resumen)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Resumen)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaCreacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaCreacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaActualizacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaActualizacion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
