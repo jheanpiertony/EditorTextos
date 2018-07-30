@@ -1,9 +1,9 @@
-﻿@model EditorTextos.Models.ClientesDocumentoJuridicos
+﻿@model ClientesDocumentoJuridicos
 
 @{
     ViewBag.Title = "Create";
+    var _clientes = ViewBag._clientes as Clientes;
 }
-
 <h2>Create</h2>
 
 
@@ -11,72 +11,79 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>ClientesDocumentoJuridicos</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.DocumentoTexto, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DocumentoTexto, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DocumentoTexto, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Resumen, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Resumen, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Resumen, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ClientesId, "ClientesId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ClientesId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ClientesId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PlantillaDocumentosId, "PlantillaDocumentosId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("PlantillaDocumentosId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.PlantillaDocumentosId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmpresasId, "EmpresasId", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("EmpresasId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EmpresasId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaActualizacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FechaActualizacion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FechaActualizacion, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+<div class="form-horizontal">
+    <h4>ClientesDocumentoJuridicos</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(model => model.DocumentoTexto, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextArea("DocumentoTexto", new { htmlAttributes = new {@id= "DocumentoTexto" } })
+            @Html.ValidationMessageFor(model => model.DocumentoTexto, "", new { @class = "text-danger" })
         </div>
     </div>
+    
+    <div class="form-group">
+        @Html.Label("Datos del cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.Label(_clientes.PrimerNombre.ToString(), htmlAttributes: new { @class = "control-label col-md-2" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Resumen, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Resumen, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Resumen, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ClientesId, "ClientesId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("ClientesId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ClientesId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PlantillaDocumentosId, "PlantillaDocumentosId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("PlantillaDocumentosId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.PlantillaDocumentosId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.EmpresasId, "EmpresasId", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("EmpresasId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EmpresasId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FechaActualizacion, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FechaActualizacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FechaActualizacion, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>
@@ -87,22 +94,15 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdn.ckeditor.com/4.10.0/standard-all/ckeditor.js"></script>
     <script>
+        var _objCliente = @Html.Raw(ViewBag._jsonDatos);
+        var PLACEHOLDERS = [];
 
+        for (var i in _objCliente) {
+            if (_objCliente.hasOwnProperty(i)) {
+                PLACEHOLDERS.push(_objCliente[i]);
+            }
+        }
 
-        @*var obj = jQuery.parseJSON("@ViewBag._Json2");
-        alert(obj.PrimerNombre === "Antonio");*@ 
-
-        var PLACEHOLDERS =  @{@Html.Raw(ViewBag._Json);}
-        alert(mn[0].PrimerNombre);
-
-        //var PLACEHOLDERS = [
-        //    {
-        //        "id": 1,
-        //        "etiqueta": "PrimerNombre",
-        //        "valor":"Antonio",
-        //        "descripcion": 'Primer nombre del cliente'
-        //    }
-        //];
 
         CKEDITOR.replace('DocumentoTexto', {
             plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,undo,placeholder,justify,font,tableresize',
@@ -110,10 +110,10 @@
             on: {
                 instanceReady: function (evt) {
                     var itemTemplate = '<li data-id="{id}">' +
-                        '<div><strong class="item-title">{PrimerNombre}</strong></div>' +
-                        '<div><i>{descripcion}</i></div>' +
+                        '<div><strong class="item-title">{name}</strong></div>' +
+                        '<div><i>{value}</i></div>' + '<div><i>{description}</i></div>' +
                         '</li>',
-                        outputTemplate = '[[{etiqueta}]]<span>&nbsp;</span>';
+                        outputTemplate = '[[{name}]]<span>&nbsp;</span>';
 
                     var autocomplete = new CKEDITOR.plugins.autocomplete(evt.editor, {
                         textTestCallback: textTestCallback,
@@ -128,7 +128,12 @@
                     }
                 }
             }
-        });
+        }).then(editor => {
+            theEditor = editor;
+        })
+            .catch(error => {
+                console.error(error);
+            });
 
         function textTestCallback(range) {
             if (!range.collapsed) {
@@ -155,7 +160,7 @@
 
         function dataCallback(matchInfo, callback) {
             var data = PLACEHOLDERS.filter(function (item) {
-                var itemName = '[[' + item.PrimerNombre.toLowerCase() + ']]';
+                var itemName = '[[' + item.name.toLowerCase() + ']]';
                 return itemName.indexOf(matchInfo.query.toLowerCase()) == 0;
             });
 

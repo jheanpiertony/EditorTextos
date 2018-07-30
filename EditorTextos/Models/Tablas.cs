@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace EditorTextos.Models
 {
@@ -76,6 +77,8 @@ namespace EditorTextos.Models
             RegularExpression(@"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$")]
         public string CorreoElectronico { get; set; }
 
+        public int? ClientesId { get; set; }
+        public virtual Clientes Clientes { get; set; }
         public int TipoCorreosId { get; set; }
         public virtual TipoCorreos TipoCorreos { get; set; }
     }
@@ -131,4 +134,49 @@ namespace EditorTextos.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? FechaActualizacion { get; set; }
     }
+
+    public class AuxClientes : Entidad
+    {
+        public String PrimerNombre { get; set; }
+        public String SegundoNombre { get; set; }
+        public String PrimerApellido { get; set; }
+        public String SegundoApellido { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaNacimiento { get; set; }
+
+        public Int64 NroDocumento { get; set; }
+        public string Nacionalidad { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime FechaExpedicion { get; set; }
+        public string LugarExpedicion { get; set; }
+
+        public string TipoDocumento { get; set; }
+
+        [Required(ErrorMessage = "Este campo es obligatorio."), DataType(DataType.EmailAddress),
+            RegularExpression(@"^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$")]
+        public string CorreoElectronico { get; set; }
+
+        public string Pais { get; set; }
+        public string Departamento { get; set; }
+        public string Ciudad { get; set; }
+        public string Direccion { get; set; }
+        public string CodeZip { get; set; }
+    }
+
+    class StringJson
+    {
+        [JsonProperty(PropertyName = "id")]
+        public int Id { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Nombre { get; set; }
+        [JsonProperty(PropertyName = "value")]
+        public string Valor { get; set; }
+        [JsonProperty(PropertyName = "description")]
+        public string Descripcion { get; set; }
+        [JsonProperty(PropertyName = "porpertyname")]
+        public string NombrePropiedad { get; set; }
+    }
+
 }

@@ -10,7 +10,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>ClientesDocumentoJuridicos</h4>
         <hr />
@@ -20,7 +20,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DocumentoTexto, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DocumentoTexto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.DocumentoTexto, new { htmlAttributes = new { @class = "form-control", @id = "DocumentoTexto" } })
                 @Html.ValidationMessageFor(model => model.DocumentoTexto, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -87,4 +87,79 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.ckeditor.com/4.10.0/standard-all/ckeditor.js"></script>
+    <script>
+        var _objCliente = @Html.Raw(ViewBag._jsonDatos);
+        var PLACEHOLDERS = [];
+
+        for (var i in _objCliente) {
+            if (_objCliente.hasOwnProperty(i)) {
+                PLACEHOLDERS.push(_objCliente[i]);
+            }
+        }
+
+
+        CKEDITOR.replace('DocumentoTexto', {
+            plugins: 'autocomplete,textmatch,toolbar,wysiwygarea,basicstyles,undo,placeholder,justify,font,tableresize',
+
+            on: {
+                instanceReady: function (evt) {
+                    var itemTemplate = '<li data-id="{id}">' +
+                        '<div><strong class="item-title">{name}</strong></div>' +
+                        '<div><i>{value}</i></div>' + '<div><i>{description}</i></div>' +
+                        '</li>',
+                        outputTemplate = '[[{name}]]<span>&nbsp;</span>';
+
+                    var autocomplete = new CKEDITOR.plugins.autocomplete(evt.editor, {
+                        textTestCallback: textTestCallback,
+                        dataCallback: dataCallback,
+                        itemTemplate: itemTemplate,
+                        outputTemplate: outputTemplate
+                    });
+
+                    // Override default getHtmlToInsert to enable rich content output.
+                    autocomplete.getHtmlToInsert = function (item) {
+                        return this.outputTemplate.output(item);
+                    }
+                }
+            }
+        }).then(editor => {
+            theEditor = editor;
+        })
+            .catch(error => {
+                console.error(error);
+            });
+
+        function textTestCallback(range) {
+            if (!range.collapsed) {
+                return null;
+            }
+
+            return CKEDITOR.plugins.textMatch.match(range, matchCallback);
+        }
+
+        function matchCallback(text, offset) {
+            var pattern = /\[{2}([A-z]|\])*$/,
+                match = text.slice(0, offset)
+                    .match(pattern);
+
+            if (!match) {
+                return null;
+            }
+
+            return {
+                start: match.index,
+                end: offset
+            };
+        }
+
+        function dataCallback(matchInfo, callback) {
+            var data = PLACEHOLDERS.filter(function (item) {
+                var itemName = '[[' + item.name.toLowerCase() + ']]';
+                return itemName.indexOf(matchInfo.query.toLowerCase()) == 0;
+            });
+
+            callback(data);
+        }
+    </script>
 }

@@ -39,27 +39,25 @@ namespace EditorTextos.Controllers
         // GET: ClientesDocumentoJuridicos/Create
         public ActionResult Create()
         {
+            Clientes _clientes;
             ViewBag.ClientesId = new SelectList(db.Clientes, "Id", "PrimerNombre");
             ViewBag.EmpresasId = new SelectList(db.Empresas, "Id", "Empresa");
             ViewBag.PlantillaDocumentosId = new SelectList(db.PlantillaDocumentos, "Id", "Plantilla");
 
-            var _dbclientes = db.Clientes
-                .Include(d => d.Direcciones)
-                .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
-                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
-                .Where(x => x.Id == 1 || x.Id == 2).ToList();
-
-
-            JsonSerializerSettings _settingsJson = new JsonSerializerSettings
+            JsonSerializerSettings _settings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                //PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-                Formatting = Formatting.Indented
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
-            ViewBag._Json = JsonConvert.SerializeObject(db.Clientes.Find(1),_settingsJson);
-            ViewBag._Json2 = JsonConvert.SerializeObject(_dbclientes, _settingsJson);
+            _clientes = db.Clientes
+                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
+                .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
+                .Include(d => d.Direcciones).FirstOrDefault(x => x.Id == 1);
+            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientes));
 
+            ViewBag._jsonDatos = JsonConvert.SerializeObject(_stringAux, _settings);
+            ViewBag._clientes = _clientes;
             return View();
         }
 
@@ -86,6 +84,7 @@ namespace EditorTextos.Controllers
         // GET: ClientesDocumentoJuridicos/Edit/5
         public ActionResult Edit(int? id)
         {
+            Clientes _clientes;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -98,6 +97,22 @@ namespace EditorTextos.Controllers
             ViewBag.ClientesId = new SelectList(db.Clientes, "Id", "PrimerNombre", clientesDocumentoJuridicos.ClientesId);
             ViewBag.EmpresasId = new SelectList(db.Empresas, "Id", "Empresa", clientesDocumentoJuridicos.EmpresasId);
             ViewBag.PlantillaDocumentosId = new SelectList(db.PlantillaDocumentos, "Id", "Plantilla", clientesDocumentoJuridicos.PlantillaDocumentosId);
+
+            JsonSerializerSettings _settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            _clientes = db.Clientes
+                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
+                .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
+                .Include(d => d.Direcciones).FirstOrDefault(x => x.Id == 1);
+            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientes));
+
+            ViewBag._jsonDatos = JsonConvert.SerializeObject(_stringAux, _settings);
+            ViewBag._clientes = _clientes;
+
             return View(clientesDocumentoJuridicos);
         }
 
@@ -154,5 +169,120 @@ namespace EditorTextos.Controllers
             }
             base.Dispose(disposing);
         }
+
+        #region FuncionesUtiles      
+        private List<StringJson> StringAux(AuxClientes clientes)
+        {
+            int _nroPropiedades = typeof(Clientes).GetProperties().Count();
+            int i = 0;
+
+            List<StringJson> _stringJson = new List<StringJson>()
+            {
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.PrimerNombre).ToString(),
+                    Descripcion= nameof(clientes.PrimerNombre).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.PrimerNombre,
+                    NombrePropiedad= nameof(clientes.PrimerNombre).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.SegundoNombre).ToString(),
+                    Descripcion= nameof(clientes.SegundoNombre).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.SegundoNombre,
+                    NombrePropiedad= nameof(clientes.SegundoNombre).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.PrimerApellido).ToString(),
+                    Descripcion= nameof(clientes.PrimerApellido).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.PrimerApellido,
+                    NombrePropiedad= nameof(clientes.PrimerApellido).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.SegundoApellido).ToString(),
+                    Descripcion= nameof(clientes.SegundoApellido).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.SegundoApellido,
+                    NombrePropiedad= nameof(clientes.SegundoApellido).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.FechaNacimiento).ToString(),
+                    Descripcion= nameof(clientes.FechaNacimiento).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.FechaNacimiento.ToString(),
+                    NombrePropiedad= nameof(clientes.FechaNacimiento).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.NroDocumento).ToString(),
+                    Descripcion= nameof(clientes.NroDocumento).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.NroDocumento.ToString(),
+                    NombrePropiedad= nameof(clientes.NroDocumento).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.Nacionalidad).ToString(),
+                    Descripcion= nameof(clientes.Nacionalidad).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.Nacionalidad,
+                    NombrePropiedad= nameof(clientes.Nacionalidad).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.FechaExpedicion).ToString(),
+                    Descripcion= nameof(clientes.FechaExpedicion).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.FechaExpedicion.ToString("{dd-MM-yyyy}"),
+                    NombrePropiedad= nameof(clientes.FechaExpedicion).ToString()
+                }
+            };
+            return _stringJson;
+        }
+
+        private AuxClientes CargarDatosClientes(Clientes clientes)
+        {
+            AuxClientes _clienteAux = new AuxClientes()
+            {
+                Id = clientes.Id,
+                PrimerNombre = clientes.PrimerNombre,
+                SegundoNombre = clientes.SegundoNombre,
+                PrimerApellido = clientes.PrimerApellido,
+                SegundoApellido = clientes.SegundoApellido,
+                FechaNacimiento = clientes.FechaNacimiento,
+                TipoDocumento = clientes.Documentos.Select(t => t.TipoDocumentos).FirstOrDefault().TipoDocumento,
+                NroDocumento = clientes.Documentos.Select(n => n.NroDocumento).FirstOrDefault(),
+                LugarExpedicion = clientes.Documentos.Select(l => l.LugarExpedicion).FirstOrDefault(),
+                FechaExpedicion = clientes.Documentos.Select(f => f.FechaExpedicion).FirstOrDefault(),
+                Nacionalidad = clientes.Documentos.Select(n => n.Nacionalidad).FirstOrDefault(),
+                Direccion = clientes.Direcciones.Direccion,
+                Ciudad = clientes.Direcciones.Ciudad,
+                Departamento = clientes.Direcciones.Departamento,
+                Pais = clientes.Direcciones.Pais,
+                CodeZip = clientes.Direcciones.CodeZip,
+                CorreoElectronico = clientes.CorreoElectronicos.Select(c => c.CorreoElectronico).FirstOrDefault().ToString()
+            };
+            return _clienteAux;
+        }
+
+        private string _buscarTipoDocumento(List<TipoDocumentos> _tipoDocumentos)
+        {
+            foreach (var item in _tipoDocumentos)
+            {
+                if (item.TipoDocumento == "CC")
+                {
+                    return item.TipoDocumento.ToString();
+                }
+            }
+
+            return "";
+        }
+        #endregion
     }
 }
