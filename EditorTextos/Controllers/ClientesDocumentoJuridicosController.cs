@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Mvc;
 using EditorTextos.Models;
 using Newtonsoft.Json;
@@ -70,6 +71,19 @@ namespace EditorTextos.Controllers
         {
             if (ModelState.IsValid)
             {
+                db.PlantillaDocumentos.Add(new PlantillaDocumentos()
+                {
+                    Descipcion = clientesDocumentoJuridicos.Resumen,
+                    FechaActualizacion=clientesDocumentoJuridicos.FechaActualizacion,
+                    FechaCreacion= clientesDocumentoJuridicos.FechaCreacion,
+                    Plantilla = "PLAntilla",
+                    DocumentoTexto= SustituirDatos( clientesDocumentoJuridicos.DocumentoTexto)
+                });
+
+
+
+
+
                 db.ClientesDocumentoJuridicos.Add(clientesDocumentoJuridicos);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -78,6 +92,10 @@ namespace EditorTextos.Controllers
             ViewBag.ClientesId = new SelectList(db.Clientes, "Id", "PrimerNombre", clientesDocumentoJuridicos.ClientesId);
             ViewBag.EmpresasId = new SelectList(db.Empresas, "Id", "Empresa", clientesDocumentoJuridicos.EmpresasId);
             ViewBag.PlantillaDocumentosId = new SelectList(db.PlantillaDocumentos, "Id", "Plantilla", clientesDocumentoJuridicos.PlantillaDocumentosId);
+
+
+
+
             return View(clientesDocumentoJuridicos);
         }
 
@@ -266,10 +284,51 @@ namespace EditorTextos.Controllers
                 Departamento = clientes.Direcciones.Departamento,
                 Pais = clientes.Direcciones.Pais,
                 CodeZip = clientes.Direcciones.CodeZip,
-                CorreoElectronico = clientes.CorreoElectronicos.Select(c => c.CorreoElectronico).FirstOrDefault().ToString()
+                CorreoElectronico = clientes.CorreoElectronicos.Select(c => c.CorreoElectronico).FirstOrDefault()
             };
             return _clienteAux;
         }
+
+
+
+        private string SustituirDatos(string documentoTexto)
+        {
+            var clientes = db.Clientes
+                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
+                .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
+                .Include(d => d.Direcciones).FirstOrDefault(x => x.Id == 1);
+
+            StringBuilder nuevoTexto = new StringBuilder(documentoTexto);
+
+            nuevoTexto.Replace("[[Id]]", clientes.Id.ToString());
+            nuevoTexto.Replace("[[PrimerNombre]]", clientes.PrimerNombre.ToString());
+            nuevoTexto.Replace("[[SegundoNombre]]", clientes.SegundoNombre.ToString());
+            nuevoTexto.Replace("[[PrimerApellido]]", clientes.PrimerApellido.ToString());
+            nuevoTexto.Replace("[[SegundoApellido]]", clientes.SegundoApellido.ToString());
+            nuevoTexto.Replace("[[FechaNacimiento]]", clientes.FechaNacimiento.ToString());
+            nuevoTexto.Replace("[[TipoDocumento]]", clientes.Documentos.Select(t => t.TipoDocumentos).FirstOrDefault().TipoDocumento.ToString());
+            nuevoTexto.Replace("[[NroDocumento]]", clientes.Documentos.Select(n => n.NroDocumento).FirstOrDefault().ToString());
+            nuevoTexto.Replace("[[LugarExpedicion]]", clientes.Documentos.Select(l => l.LugarExpedicion).FirstOrDefault().ToString());
+            nuevoTexto.Replace("[[FechaExpedicion]]", clientes.Documentos.Select(f => f.FechaExpedicion).FirstOrDefault().ToString());
+            nuevoTexto.Replace("[[Nacionalidad]]", clientes.Documentos.Select(n => n.Nacionalidad).FirstOrDefault().ToString());
+            nuevoTexto.Replace("[[Direccion]]", clientes.Direcciones.Direccion.ToString());
+            nuevoTexto.Replace("[[Ciudad]]", clientes.Direcciones.Ciudad.ToString());
+            nuevoTexto.Replace("[[Departamento]]", clientes.Direcciones.Departamento.ToString());
+            nuevoTexto.Replace("[[Pais]]", clientes.Direcciones.Pais.ToString());
+            nuevoTexto.Replace("[[CodeZip]]", clientes.Direcciones.CodeZip.ToString());
+            nuevoTexto.Replace("[[CorreoElectronico]]", clientes.CorreoElectronicos.Select(c => c.CorreoElectronico).FirstOrDefault().ToString());
+            //string x = "Hello [[si]] [[hola]]  [[si]] world";
+
+            //StringBuilder builder = new StringBuilder(x);
+            //builder.Replace("[[si]]", "no");
+            //builder.Replace("[[hola]]", "adios");
+
+            string  texto = nuevoTexto.ToString();
+            return texto;
+        }
+
+
+
 
         private string _buscarTipoDocumento(List<TipoDocumentos> _tipoDocumentos)
         {

@@ -38,9 +38,9 @@ namespace EditorTextos.Migrations
 
             context.CorreoElectronicos.AddOrUpdate(
                x => x.Id,
-               new CorreoElectronicos { Id = 1, CorreoElectronico = "desarrollador@unicoc.edu.co", TipoCorreosId = 1 },
-               new CorreoElectronicos { Id = 2, CorreoElectronico = "viejotin@hotmail.com", TipoCorreosId = 2 }, 
-               new CorreoElectronicos { Id = 3, CorreoElectronico = "ford@ford.co", TipoCorreosId = 1 },
+               new CorreoElectronicos { Id = 1, CorreoElectronico = "desarrollador@unicoc.edu.co", TipoCorreosId = 1, ClientesId = 1 },
+               new CorreoElectronicos { Id = 2, CorreoElectronico = "viejotin@hotmail.com", TipoCorreosId = 2, ClientesId = 2 }, 
+               new CorreoElectronicos { Id = 3, CorreoElectronico = "ford@ford.co", TipoCorreosId = 1  },
                new CorreoElectronicos { Id = 4, CorreoElectronico = "unicoc@unicoc.edu.co", TipoCorreosId = 1 }
                );
 
