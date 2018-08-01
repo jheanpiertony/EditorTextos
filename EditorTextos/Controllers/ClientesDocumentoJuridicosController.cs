@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Web.Mvc;
 using EditorTextos.Models;
@@ -54,9 +55,17 @@ namespace EditorTextos.Controllers
             _clientes = db.Clientes
                 .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
                 .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
-                .Include(d => d.Direcciones).FirstOrDefault(x => x.Id == 1);
-            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientes));
+                .Include(d => d.Direcciones).Where(x => x.Id == 2).FirstOrDefault();
+            var _clientes2 = new List<Clientes>();
+            _clientes2.Add(_clientes);
 
+
+            var a = CreateDataTable<Clientes>(_clientes2);
+            var b = a.Columns[0].ColumnName.ToString();
+            var _c= a.Rows[0].ItemArray[5];
+
+
+            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientes));
             ViewBag._jsonDatos = JsonConvert.SerializeObject(_stringAux, _settings);
             ViewBag._clientes = _clientes;
             return View();
@@ -71,19 +80,19 @@ namespace EditorTextos.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.PlantillaDocumentos.Add(new PlantillaDocumentos()
+                var _platilla=new PlantillaDocumentos()
                 {
                     Descipcion = clientesDocumentoJuridicos.Resumen,
-                    FechaActualizacion=clientesDocumentoJuridicos.FechaActualizacion,
-                    FechaCreacion= clientesDocumentoJuridicos.FechaCreacion,
-                    Plantilla = "PLAntilla",
-                    DocumentoTexto= SustituirDatos( clientesDocumentoJuridicos.DocumentoTexto)
-                });
-
-
-
-
-
+                    FechaActualizacion = clientesDocumentoJuridicos.FechaActualizacion,
+                    FechaCreacion = clientesDocumentoJuridicos.FechaCreacion,
+                    Plantilla = "PLANTILLA PRUEBA",
+                    DocumentoTexto = SustituirDatos(clientesDocumentoJuridicos.DocumentoTexto)
+                };
+                clientesDocumentoJuridicos.ClientesId = 1;
+                clientesDocumentoJuridicos.EmpresasId = 1;
+                clientesDocumentoJuridicos.FechaActualizacion = DateTime.Now;
+                clientesDocumentoJuridicos.FechaCreacion = DateTime.Now;
+                clientesDocumentoJuridicos.PlantillaDocumentos=_platilla;
                 db.ClientesDocumentoJuridicos.Add(clientesDocumentoJuridicos);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -92,10 +101,6 @@ namespace EditorTextos.Controllers
             ViewBag.ClientesId = new SelectList(db.Clientes, "Id", "PrimerNombre", clientesDocumentoJuridicos.ClientesId);
             ViewBag.EmpresasId = new SelectList(db.Empresas, "Id", "Empresa", clientesDocumentoJuridicos.EmpresasId);
             ViewBag.PlantillaDocumentosId = new SelectList(db.PlantillaDocumentos, "Id", "Plantilla", clientesDocumentoJuridicos.PlantillaDocumentosId);
-
-
-
-
             return View(clientesDocumentoJuridicos);
         }
 
@@ -257,9 +262,69 @@ namespace EditorTextos.Controllers
                     Id= i++,
                     Nombre= nameof(clientes.FechaExpedicion).ToString(),
                     Descripcion= nameof(clientes.FechaExpedicion).ToString() +" de "+ nameof(Clientes),
-                    Valor= clientes.FechaExpedicion.ToString("{dd-MM-yyyy}"),
+                    Valor= clientes.FechaExpedicion.ToString("dd-MM-yyyy"),
                     NombrePropiedad= nameof(clientes.FechaExpedicion).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.LugarExpedicion).ToString(),
+                    Descripcion= nameof(clientes.LugarExpedicion).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.LugarExpedicion.ToString(),
+                    NombrePropiedad= nameof(clientes.LugarExpedicion).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.TipoDocumento).ToString(),
+                    Descripcion= nameof(clientes.TipoDocumento).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.TipoDocumento.ToString(),
+                    NombrePropiedad= nameof(clientes.TipoDocumento).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.CorreoElectronico).ToString(),
+                    Descripcion= nameof(clientes.CorreoElectronico).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.CorreoElectronico.ToString(),
+                    NombrePropiedad= nameof(clientes.FechaExpedicion).ToString()
+                },
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.Pais).ToString(),
+                    Descripcion= nameof(clientes.Pais).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.Pais.ToString(),
+                    NombrePropiedad= nameof(clientes.Pais).ToString()
                 }
+                ,
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.Departamento).ToString(),
+                    Descripcion= nameof(clientes.Departamento).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.Departamento.ToString(),
+                    NombrePropiedad= nameof(clientes.Departamento).ToString()
+                }
+                ,
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.Ciudad).ToString(),
+                    Descripcion= nameof(clientes.Ciudad).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.Ciudad.ToString(),
+                    NombrePropiedad= nameof(clientes.Ciudad).ToString()
+                }
+                ,
+                new StringJson
+                {
+                    Id= i++,
+                    Nombre= nameof(clientes.Direccion).ToString(),
+                    Descripcion= nameof(clientes.Direccion).ToString() +" de "+ nameof(Clientes),
+                    Valor= clientes.Direccion.ToString(),
+                    NombrePropiedad= nameof(clientes.Direccion).ToString()
+                }
+
             };
             return _stringJson;
         }
@@ -317,16 +382,39 @@ namespace EditorTextos.Controllers
             nuevoTexto.Replace("[[Pais]]", clientes.Direcciones.Pais.ToString());
             nuevoTexto.Replace("[[CodeZip]]", clientes.Direcciones.CodeZip.ToString());
             nuevoTexto.Replace("[[CorreoElectronico]]", clientes.CorreoElectronicos.Select(c => c.CorreoElectronico).FirstOrDefault().ToString());
-            //string x = "Hello [[si]] [[hola]]  [[si]] world";
 
-            //StringBuilder builder = new StringBuilder(x);
-            //builder.Replace("[[si]]", "no");
-            //builder.Replace("[[hola]]", "adios");
-
-            string  texto = nuevoTexto.ToString();
-            return texto;
+            return nuevoTexto.ToString();
         }
 
+
+/// <summary>
+/// Create data table from list.
+/// https://stackoverflow.com/questions/18746064/using-reflection-to-create-a-datatable-from-a-class
+/// </summary>
+        public static DataTable CreateDataTable<T>(IEnumerable<T> list)
+        {
+            Type type = typeof(T);
+            var properties = type.GetProperties();
+
+            DataTable dataTable = new DataTable();
+            foreach (PropertyInfo info in properties)
+            {
+                dataTable.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
+            }
+
+            foreach (T entity in list)
+            {
+                object[] values = new object[properties.Length];
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    values[i] = properties[i].GetValue(entity);
+                }
+
+                dataTable.Rows.Add(values);
+            }
+
+            return dataTable;
+        }
 
 
 
