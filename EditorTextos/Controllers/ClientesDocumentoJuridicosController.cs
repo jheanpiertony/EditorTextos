@@ -26,7 +26,7 @@ namespace EditorTextos.Controllers
         // GET: ClientesDocumentoJuridicos/Details/5
         public ActionResult Details(int? id)
         {
-            if (id == null)
+            if (id == null)B
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -41,7 +41,7 @@ namespace EditorTextos.Controllers
         // GET: ClientesDocumentoJuridicos/Create
         public ActionResult Create()
         {
-            Clientes _clientes;
+            Clientes _clientes, _clientesAux;
             ViewBag.ClientesId = new SelectList(db.Clientes, "Id", "PrimerNombre");
             ViewBag.EmpresasId = new SelectList(db.Empresas, "Id", "Empresa");
             ViewBag.PlantillaDocumentosId = new SelectList(db.PlantillaDocumentos, "Id", "Plantilla");
@@ -52,22 +52,26 @@ namespace EditorTextos.Controllers
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
-            _clientes = db.Clientes
-                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
-                .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
-                .Include(d => d.Direcciones).Where(x => x.Id == 2).FirstOrDefault();
-            var _clientes2 = new List<Clientes>();
-            _clientes2.Add(_clientes);
+            //_clientes = db.Clientes
+            //    .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
+            //    .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
+            //    .Include(d => d.Direcciones).Where(x => x.Id == 2).FirstOrDefault();
+            //var _clientes2 = new List<Clientes>();
+            //_clientes2.Add(_clientes);
+
+            //_clientesAux = db.Clientes.;
+            var _clientesAux2 = new List<Clientes>();
+            //_clientes2.Add(_clientesAux);
+
+            var aa = CreateDataTable<Clientes>(_clientesAux2);
+            //var a = CreateDataTable<Clientes>(_clientes2);
+            //var b = a.Columns[0].ColumnName.ToString();
+            //var _c= a.Rows[0].ItemArray[5];
 
 
-            var a = CreateDataTable<Clientes>(_clientes2);
-            var b = a.Columns[0].ColumnName.ToString();
-            var _c= a.Rows[0].ItemArray[5];
-
-
-            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientes));
+            List<StringJson> _stringAux = StringAux(CargarDatosClientes(_clientesAux));
             ViewBag._jsonDatos = JsonConvert.SerializeObject(_stringAux, _settings);
-            ViewBag._clientes = _clientes;
+            ViewBag._clientes = _clientesAux;
             return View();
         }
 

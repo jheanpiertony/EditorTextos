@@ -47,7 +47,6 @@ namespace EditorTextos.Models
     [Table("Documentos")]
     public class Documentos: Entidad
     {
-        public TipoDocumentos TipoDocumento{ get; set; }
         public Int64 NroDocumento { get; set; }
         public string Nacionalidad { get; set; }
         [DataType(DataType.Date)]
