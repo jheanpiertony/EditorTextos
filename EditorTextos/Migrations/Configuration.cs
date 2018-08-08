@@ -24,7 +24,8 @@ namespace EditorTextos.Migrations
             context.Documentos.AddOrUpdate(
                x => x.Id,
                new Documentos { Id = 1, TipoDocumentosId = 1, ClientesId = 1, FechaExpedicion = new DateTime(2010, 07, 1), LugarExpedicion = "Bogota", Nacionalidad = "Colombiano", NroDocumento = 1126905946 },
-               new Documentos { Id = 2, TipoDocumentosId = 4, ClientesId = 2, FechaExpedicion = new DateTime(2017, 01, 31), LugarExpedicion = "Maturin", Nacionalidad = "Venezolano", NroDocumento = 876543290 }
+               new Documentos { Id = 2, TipoDocumentosId = 4, ClientesId = 2, FechaExpedicion = new DateTime(2017, 01, 31), LugarExpedicion = "Maturin", Nacionalidad = "Venezolano", NroDocumento = 876543290 },
+               new Documentos { Id = 3, TipoDocumentosId = 4, ClientesId = 1, FechaExpedicion = new DateTime(2017, 01, 31), LugarExpedicion = "Valencia", Nacionalidad = "Venezolano", NroDocumento = 9856421 }
                );
 
             context.TipoDocumentos.AddOrUpdate(

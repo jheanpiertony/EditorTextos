@@ -60,13 +60,13 @@ namespace EditorTextos.Controllers
 
 
 
-            var _clientesAux = db.Clientes.Where(i=> i.Id==1)
-                .Include(x => x.Documentos.Select(t => t.TipoDocumentos))
+            var _clientesAux = db.Clientes.Where(x => x.Id == 1)
+                .Include(d => d.Documentos.Select(t => t.TipoDocumentos))
                 .Include(c => c.CorreoElectronicos.Select(t => t.TipoCorreos))
                 .Include(d => d.Direcciones);
 
-
-
+            var _a = _clientesAux.Select(x=> x.Documentos.Where(t=> t.TipoDocumentos.TipoDocumento=="CC"));
+            //var _b=
 
             var _clientes2 = new List<Clientes>();
             _clientes2.Add(_clientes);
@@ -365,8 +365,6 @@ namespace EditorTextos.Controllers
             return _clienteAux;
         }
 
-
-
         private string SustituirDatos(string documentoTexto)
         {
             var clientes = db.Clientes
@@ -406,46 +404,53 @@ namespace EditorTextos.Controllers
         {
             Type type = typeof(T);
             var properties = type.GetProperties();
-
             DataTable dataTable = new DataTable();
+            int j = 0;
+
             foreach (PropertyInfo info in properties)
             {
-                if (typeof(T).GetProperty(info.Name).GetGetMethod().IsVirtual)
-                {
-
-                }
-                else
-                {
+                j++;
+                //if (typeof(T).GetProperty(info.Name).GetGetMethod().IsVirtual )
+                //{
+                //    //if (info.PropertyType.IsGenericType)
+                //    //{
+                //    //    dataTable.Columns.AddRange(_createDateTable(info));
+                //    //}
+                //}
+                //else
+                //{
                     dataTable.Columns.Add(new DataColumn(info.Name, Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType));
-                }
-
-                
+                //}                
             }
-
             
             foreach (T entity in list)
             {
                 object[] values = new object[properties.Length];
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    if (typeof(IEnumerable).IsAssignableFrom(entity.GetType().GetTypeInfo()))
-                    {
+                    //if (typeof(IEnumerable).IsAssignableFrom(entity.GetType().GetTypeInfo()))
+                    //{
 
-                    }
-                    else
-                    {
+                    //}
+                    //else
+                    //{
                         values[i] = properties[i].GetValue(entity);
-                    }
-                    
+                    //}                    
                 }
-
                 dataTable.Rows.Add(values);
             }
 
             return dataTable;
         }
 
+        private static DataColumn[] _createDateTable(PropertyInfo info)
+        {
 
+
+
+
+            throw new NotImplementedException();
+        }
 
         private string _buscarTipoDocumento(List<TipoDocumentos> _tipoDocumentos)
         {

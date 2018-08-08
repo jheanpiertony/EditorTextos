@@ -41,7 +41,7 @@ namespace EditorTextos.Models
         public virtual Direcciones Direcciones { get; set; }
         public int CorreoElectronicosId { get; set; }
         public virtual CorreoElectronicos CorreoElectronicos { get; set; }
-        public virtual ICollection<ClientesDocumentoJuridicos> ClientesDocumentoJuridicos { get; set; }
+        public virtual List<ClientesDocumentoJuridicos> ClientesDocumentoJuridicos { get; set; }
     }
 
     [Table("Documentos")]
@@ -67,6 +67,7 @@ namespace EditorTextos.Models
         public string Descripcion { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Prioridad { get; set; }
+        //public virtual Documentos  Documentos{ get; set; }
     }
 
     [Table("CorreoElectronicos")]
